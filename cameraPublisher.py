@@ -2,6 +2,8 @@ from io import BytesIO
 from picamera import PiCamera
 from PIL import Image
 
+test_mode = False
+
 class piCamPublisher:
 	
 	def __init__(self):
@@ -13,6 +15,9 @@ class piCamPublisher:
 		self.__callback_list += [callback]
 		
 	def run(self):
+		if test_mode:
+			test_run(self.__callback_list)
+			return
 		try:
 			for foo in self.__camera.capture_continuous(self.__stream, format='jpeg'):
 				self.__stream.truncate()
@@ -28,5 +33,14 @@ class piCamPublisher:
 ## below for testing
 from time import sleep
 from datetime import datetime as dt
+from os import listdir
+
 def test_callback(image):
 	print(dt.now())
+
+def test_run(callback_list):
+	files = sorted(listdir('testData/'))
+	for file in files:
+		image = Image.open('testData/'+file)
+		for fx in callback_list:
+			fx(image)
