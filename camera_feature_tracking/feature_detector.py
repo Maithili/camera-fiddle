@@ -8,7 +8,6 @@ class featureDetector:
 		self.grayimage = None
 		self.keypoints = []
 		self.params = {}
-		pass
 
 	def set_image(self, image):
 		self.image = image
@@ -27,6 +26,19 @@ class featureDetector:
 
 	def get_keypoints(self):
 		return self.keypoints
+
+	def set_descriptor(self, descriptor):
+		self.descriptor = descriptor
+
+	def get_descriptors(self):
+		if not len(self.keypoints):
+			print('Cannot extract descriptors without keypoints!')
+			return
+		self.descriptor.set_image(self.image)
+		self.descriptor.set_keypoints(self.keypoints)
+		self.descriptor.compute()
+		descriptors = self.descriptor.get_descriptors()
+		return descriptors
 
 	def draw(self):
 		if not len(self.image):
