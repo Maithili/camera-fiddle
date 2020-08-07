@@ -1,7 +1,6 @@
 import cv2
-from utils import *
 
-class featureDescriptor:
+class baseDescriptor:
 	def __init__(self, parameters={}):
 		self.extractor = None
 		self.image = None
@@ -20,3 +19,12 @@ class featureDescriptor:
 
 	def get_descriptors(self):
 		return self.descriptors
+
+class briefDescriptor (baseDescriptor):
+	def __init__(self, parameters={}):
+		super().__init__()
+		self.extractor = cv2.xfeatures2d.BriefDescriptorExtractor_create()
+
+	def compute(self):
+		# descriptor is size of keypoints x 32
+		self.get_keypoints, self.descriptors = self.extractor.compute(self.image, self.keypoints)
